@@ -1,27 +1,27 @@
 class Four < Day
   def initialize
-    @lines = File.readlines('four.txt', chomp: true)
+    @points = File.readlines('four.txt', chomp: true).map do
+      a, b = _1.split(',')
+
+      c, d = a.split('-')
+      e, f = b.split('-')
+      [c.to_i, d.to_i, e.to_i, f.to_i]
+    end
   end
 
   def part_a
-    @lines.sum do
-      points = _1.split(',').map { |a| a.split('-').map(&:to_i) }
-
-      (points[0][0] <= points[1][0] && points[0][1] >= points[1][1] ||
-        points[0][0] >= points[1][0] && points[0][1] <= points[1][1]) ? 1 : 0
-    end
+    @points.select {
+      _1[0] <= _1[2] && _1[1] >= _1[3] ||
+      _1[0] >= _1[2] && _1[1] <= _1[3]
+    }.size
   end
 
   def part_b
-    @lines.sum do
-      points = _1.split(',').map { |a| a.split('-').map(&:to_i) }
-
-      (
-        points[0][0] <= points[1][0] && points[0][1] >= points[1][0] ||
-        points[0][0] <= points[1][1] && points[0][1] >= points[1][1] ||
-        points[1][0] <= points[0][0] && points[1][1] >= points[0][0] ||
-        points[1][0] <= points[0][1] && points[1][1] >= points[0][1]
-      ) ? 1 : 0
-    end
+    @points.select {
+      _1[0] <= _1[2] && _1[1] >= _1[2] ||
+      _1[0] <= _1[3] && _1[1] >= _1[3] ||
+      _1[2] <= _1[0] && _1[3] >= _1[0] ||
+      _1[2] <= _1[1] && _1[3] >= _1[1]
+    }.size
   end
 end
