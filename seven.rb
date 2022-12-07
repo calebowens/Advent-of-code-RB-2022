@@ -8,7 +8,7 @@ class Seven < Day
       @sub_folders = []
     end
 
-    def navigate(folder_name)
+    def navigate
       folder = Folder.new(self)
 
       @sub_folders.push folder
@@ -38,7 +38,7 @@ class Seven < Day
         if folder == '..'
           current_folder = current_folder.parent
         else
-          current_folder = current_folder.navigate(folder)
+          current_folder = current_folder.navigate
         end
 
         instructions.shift
