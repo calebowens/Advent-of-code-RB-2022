@@ -3,10 +3,6 @@ require 'benchmark'
 class Day
   include Benchmark
 
-  def initialize
-    raise 'unimplemented'
-  end
-
   def part_a
     raise 'unimplemented'
   end
@@ -21,13 +17,11 @@ class Day
       times = []
       self.descendants.reverse.each do |day|
         times << x.report("#{day.name}:") do
-          1000.times do
-            instance = day.new
-            outputs[day.name] = {
-              a: instance.part_a,
-              b: instance.part_b
-            }
-          end
+          instance = day.new
+          outputs[day.name] = {
+            a: instance.part_a,
+            b: instance.part_b
+          }
         end
       end
 
