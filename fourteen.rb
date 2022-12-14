@@ -118,7 +118,7 @@ class Fourteen < Day
   def part_b
     floor_depth = @scene.depth + 1
 
-    ((500 - floor_depth * 2)..(500 + floor_depth * 2)).each do |x|
+    ((500 - floor_depth)..(500 + floor_depth)).each do |x|
       @scene[x][floor_depth] = '~'
     end
 
