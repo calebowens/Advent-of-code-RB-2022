@@ -13,6 +13,16 @@ class Fourteen < Day
     def depth
       reject(&:nil?).map(&:size).max
     end
+
+    def inspect
+      (0..size).each do |x|
+        (0..depth).each do |y|
+          print self[x][y] || ' '
+        end
+
+        print "\n"
+      end
+    end
   end
 
   class SandGrain
