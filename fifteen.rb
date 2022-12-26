@@ -13,6 +13,40 @@ class Fifteen < Day
 
       Fifteen.distance(@sensor, point) < @radius
     end
+
+    def lines
+      [
+        Fifteen::Line.new(1, [@sensor[0] + @radius, @sensor[1]]),
+        Fifteen::Line.new(-1, [@sensor[0] + @radius, @sensor[1]]),
+        Fifteen::Line.new(1, [@sensor[0] - @radius, @sensor[1]]),
+        Fifteen::Line.new(-1, [@sensor[0] - @radius, @sensor[1]])
+      ]
+    end
+  end
+
+  class Line
+    attr_accessor :gradient, :height
+
+    def initialize(gradient, point)
+      @gradient = gradient
+
+      @height = point[1] - point[0] * gradient
+    end
+
+    def same_as?(other)
+      @gradient == other.gradient && @height = other.height
+    end
+
+    def intersection(other)
+      # m1x + c1 = m2x + c2
+      # x(m1 - m2) = c2 - c1
+      # x = (c2 - c1)/(m1 - m2)
+      # y = m1x + c1
+      x = (other.height - @height) / (@gradient - other.gradient)
+      y = x * @gradient + @height
+
+      [x, y]
+    end
   end
 
   def self.distance(a, b)
@@ -49,7 +83,7 @@ class Fifteen < Day
         break
       end
 
-      start += 1000
+      start += 3000
     end
 
     Kernel.loop do
@@ -61,7 +95,7 @@ class Fifteen < Day
         break
       end
 
-      finish -= 1000
+      finish -= 3000
     end
 
     finish - start - beacon_count + 1
@@ -71,7 +105,15 @@ class Fifteen < Day
     @sensors.any? { _1.contains_point([x, 2000000]) }
   end
 
+  def line_between(a, b)
+    a.lines.find { |a_line| b.lines.any? { |b_line| a_line.height == b_line.height } }
+  end
+
   def part_b
-    a, b = @sensors.permutation(2).select { |(a, b)| a.radius + b.radius - Fifteen.distance(a.sensor, b.sensor) == 0 }.uniq { _1.sum { |a| a.radius[0] } }
+    a, b = @sensors.permutation(2).select { |(a, b)| (a.radius + b.radius - Fifteen.distance(a.sensor, b.sensor)).zero? }.map { |(a, b)| line_between(a, b) }.uniq(&:gradient)
+
+    x, y = a.intersection(b)
+
+    x * 4_000_000 + y
   end
 end
